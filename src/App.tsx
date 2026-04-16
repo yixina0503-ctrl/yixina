@@ -228,9 +228,13 @@ export default function App() {
                   className={`flex-1 relative group cursor-pointer overflow-hidden ${idx < 2 ? 'border-r border-border' : ''}`}
                 >
                   <img 
-                    src={`${item.img}?auto=format&fit=crop&w=400&q=80`}
+                    src={item.img}
                     className="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:opacity-40 transition-opacity duration-500"
                     alt={item.name}
+                    referrerPolicy="no-referrer"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1528164344705-47542687000d?w=400&h=300&fit=crop';
+                    }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                   <div className="relative h-full p-4 flex flex-col justify-between z-10">
@@ -293,17 +297,43 @@ export default function App() {
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
             className="fixed top-0 right-0 bottom-0 z-[9999] w-full md:w-[500px] bg-[#121214]/98 backdrop-blur-2xl border-l border-white/10 shadow-[-20px_0_50px_rgba(0,0,0,0.5)] flex flex-col"
           >
-            <div className="relative h-[40vh] shrink-0">
-              <img 
-                src={`${selectedFolklore.img}?auto=format&fit=crop&w=1000&q=90`} 
-                alt={selectedFolklore.name}
-                className="w-full h-full object-cover"
-                referrerPolicy="no-referrer"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#121214] via-transparent to-black/20" />
+            <div className="relative h-[40vh] shrink-0 bg-black">
+              {selectedFolklore.video ? (
+                <iframe
+                  src={(() => {
+                    const v = selectedFolklore.video;
+                    if (v.includes('youtube.com') || v.includes('youtu.be')) {
+                      return v.replace('watch?v=', 'embed/').split('&')[0];
+                    }
+                    if (v.includes('bilibili.com')) {
+                      // Extract BVID if it's a standard link
+                      const bvidMatch = v.match(/BV[a-zA-Z0-9]+/);
+                      if (bvidMatch) {
+                        return `https://player.bilibili.com/player.html?bvid=${bvidMatch[0]}&page=1&high_quality=1&danmaku=0`;
+                      }
+                    }
+                    return v;
+                  })()}
+                  className="w-full h-full"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  title={selectedFolklore.name}
+                />
+              ) : (
+                <img 
+                  src={selectedFolklore.img} 
+                  alt={selectedFolklore.name}
+                  className="w-full h-full object-cover"
+                  referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1528164344705-47542687000d?w=1000&h=600&fit=crop';
+                  }}
+                />
+              )}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#121214] via-transparent to-black/20 pointer-events-none" />
               <button 
                 onClick={handleReset}
-                className="absolute top-6 right-6 p-3 bg-black/50 hover:bg-red-600/80 rounded-full transition-all duration-300 text-white group"
+                className="absolute top-6 right-6 p-3 bg-black/50 hover:bg-red-600/80 rounded-full transition-all duration-300 text-white group z-10"
               >
                 <X size={24} className="group-hover:rotate-90 transition-transform" />
               </button>

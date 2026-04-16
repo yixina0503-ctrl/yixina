@@ -78,7 +78,12 @@ export const FolkloreMap: React.FC<FolkloreMapProps> = ({
             transform: ${isSelected ? 'scale(1.1)' : 'scale(1)'};
             z-index: ${isSelected ? '1000' : '10'};
           ">
-            <img src="${folklore.img}?w=100&h=100&fit=crop" style="width: 100%; height: 100%; object-fit: cover;" referrerPolicy="no-referrer" />
+            <img 
+              src="${folklore.img}" 
+              style="width: 100%; height: 100%; object-fit: cover;" 
+              referrerPolicy="no-referrer" 
+              onerror="this.src='https://images.unsplash.com/photo-1528164344705-47542687000d?w=100&h=100&fit=crop'"
+            />
           </div>
           ${isSelected ? `<div style="position: absolute; top: -4px; left: -4px; right: -4px; bottom: -4px; border-radius: 9999px; border: 1px solid ${borderColor}; animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite; opacity: 0.75;"></div>` : ''}
           ${isUser && !isSelected ? '<div style="position: absolute; -top: 2px; -right: 2px; width: 12px; height: 12px; background: #3B82F6; border: 2px solid white; border-radius: 9999px; z-index: 20;"></div>' : ''}

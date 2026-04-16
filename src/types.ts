@@ -8,6 +8,7 @@ export interface Folklore {
   lng: number;
   desc: string;
   img: string;
+  video?: string;
   isUserContribution?: boolean;
 }
 
